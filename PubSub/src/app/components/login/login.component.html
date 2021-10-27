@@ -1,0 +1,30 @@
+<div class="sidenav container">
+    <div class="login-main-text">
+       <h2>Big F1 fan?</h2>
+       <p>Get all the latest updates on F1 race results, schedules and many more.<br> You are just a login away.</p>
+    </div>
+    <div class="sidenav-div">
+        <div class="login-form form-div">
+            <div class="form-div error-span-div error-span">
+                {{ message }}
+            </div>
+              <div class="validate-input form-inputs-div">
+                 <mat-form-field class="input-field" appearance="fill">
+                    <input matInput type="text" [(ngModel)]="username" name="username" placeholder="Username">
+                  </mat-form-field>
+                  
+              </div>
+              <div class="validate-input form-inputs-div">
+                 <mat-form-field class="input-field" appearance="fill">
+                    <input matInput type="password" [(ngModel)]="password" name="password" placeholder="Password">
+                  </mat-form-field>
+              </div>
+              <div class="login-register-div">
+                <div class="login-register"><button mat-raised-button (click)="onLoginSubmit()" color="primary">Login</button></div>
+                <div class="login-register"><a class="register-link" (click)="register()"><span>Sign Up?</span></a></div>
+              </div>
+        </div>
+     </div>
+ </div>
+ <div class="main">
+ </div>

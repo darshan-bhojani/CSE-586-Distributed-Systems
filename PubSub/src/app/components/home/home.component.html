@@ -1,0 +1,297 @@
+<div class="container-fluid container-div">
+
+  <div class="logo welcome-user">
+    Hello {{username}}!!
+    <div class="logout-div">
+      <div class="logout-btn-div"><button class="logout-btn" mat-raised-button
+          (click)="onLogout()" color="primary">Logout</button></div>
+    </div>
+  </div>
+
+  <div class="row table-row">
+    <mat-tab-group>
+
+      <mat-tab label="Manage Subscriptions">
+        <ng-template matTabContent>
+
+          <div class="subs-div">
+            <mat-card class="subscription-card">
+              <mat-card-title>Subscribe to Topics.</mat-card-title>
+              <mat-card-subtitle>Go ahead and subscribe to your favourite drivers and teams to get live updates.
+              </mat-card-subtitle>
+
+              <mat-card-content>
+                <div class="subscription-card-div">
+                  <div class="subscription-header-div col-4">
+                    <div>
+                      <mat-label class="col-3 subsMessage-label">&nbsp;&nbsp;&nbsp;{{subscription_message}}</mat-label>
+                    </div>
+                    <div class="row subscription-div">
+                      <div class="">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Select Topic</mat-label>
+                          <mat-select [(ngModel)]="mainTopic">
+                            <mat-option *ngFor="let main_topic of main_topics" [value]="main_topic.topicId" [disabled]="main_topic.isFutureTopic"
+                              (click)="mainTopicSelected(main_topic)">
+                              {{main_topic.name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Select Sub-Topic *optional</mat-label>
+                          <mat-select [(ngModel)]="subTopic">
+                            <mat-option *ngFor="let sub_topic of main_topic_selected.sub_topics" [disabled]="sub_topic.isFutureTopic"
+                              [value]="sub_topic.topicId" (click)="subTopicSelected(sub_topic)">
+                              {{sub_topic.name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <!-- <div class="col-3" *ngIf="showHiddenDiv">
+        </div> -->
+
+                      <div class="" *ngIf="driverSelected">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Select Drivers</mat-label>
+                          <mat-select [(ngModel)]="driversList" multiple>
+                            <!-- <mat-option #allDriversSelected (click)="toggleAllDriversSelection(allDriversSelected)" [value]="0">Select All</mat-option> -->
+                            <mat-option *ngFor="let driver of drivers" [value]="driver.driverId">
+                              {{driver.name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="" *ngIf="constructorSelected">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Select Constructors</mat-label>
+                          <mat-select multiple [(value)]="constructorsList">
+                            <!-- <mat-option #allConstructorsSelected (click)="toggleAllConstructorsSelection(allConstructorsSelected)" [value]="0">Select All</mat-option> -->
+                            <mat-option *ngFor="let constructor of constructors" [value]="constructor.constructorId">
+                              {{constructor.name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+
+                      </div>
+
+                      <div class="" *ngIf="raceSelected">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Select Races</mat-label>
+                          <mat-select multiple [(value)]="racesList">
+                            <!-- <mat-option #allRacesSelected (click)="toggleAllRacesSelection(allRacesSelected)" [value]="0">Select All</mat-option> -->
+                            <mat-option *ngFor="let race of races" [value]="race.name">
+                              {{race.name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="" *ngIf="yearSelected">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Select Years</mat-label>
+                          <mat-select multiple [(value)]="yearsList">
+                            <!-- <mat-option #allRacesSelected (click)="toggleAllRacesSelection(allRacesSelected)" [value]="0">Select All</mat-option> -->
+                            <mat-option *ngFor="let year of years" [value]="year.name">
+                              {{year.name}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="subscription-div">
+                        <div class="subscription-btn-div"><button class="subscribe-btn" mat-raised-button
+                            (click)="onSubscription()" color="primary">Subscribe</button></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="subscription-table-div col-8">
+                    <div class="subs-table-div">
+                      <table mat-table [dataSource]="user_subscription_table_data" class="mat-elevation-z8 subs-table">
+
+                        <ng-container matColumnDef="select">
+                          <th mat-header-cell class="table-header" *matHeaderCellDef>
+                            <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="subscriptionTableSelection.hasValue() && isAllSelected()"
+                              [indeterminate]="subscriptionTableSelection.hasValue() && !isAllSelected()"
+                              [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
+                          </th>
+
+                          <td mat-cell *matCellDef="let row">
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? subscriptionTableSelection.toggle(row) : null"
+                              [checked]="subscriptionTableSelection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                            </mat-checkbox>
+                          </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="main_topic">
+                          <th mat-header-cell class="table-header" *matHeaderCellDef>Main Topic</th>
+                          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sub_topic">
+                          <th mat-header-cell class="table-header" *matHeaderCellDef>Sub Topic</th>
+                          <td mat-cell *matCellDef="let element"> {{element.sub_topic_name}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="names">
+                          <th mat-header-cell class="table-header" *matHeaderCellDef>Names</th>
+                          <td mat-cell *matCellDef="let element"> {{element.sub_topic_values}} </td>
+                        </ng-container>
+
+
+                        <!-- <ng-container class="subscription-table-header" *ngFor="let column of user_subscription_table_columns; let i = index" [matColumnDef]="column.columnDef">
+              <th mat-header-cell *matHeaderCellDef>
+                {{column.header}}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{row[0]}}
+              </td>
+            </ng-container> -->
+
+                        <!-- <ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column.columnDef">
+              <th mat-header-cell *matHeaderCellDef> {{column.header}} </th>
+              <td mat-cell *matCellDef="let element"> {{element}} </td>
+            </ng-container> -->
+
+                        <tr mat-header-row *matHeaderRowDef="displayedUserSubscriptionColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedUserSubscriptionColumns;"
+                          (click)="subscriptionTableSelection.toggle(row)">
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="unsubscription-div">
+                      <div class="unsubscription-btn-div"><button class="unsubscribe-btn" mat-raised-button
+                          (click)="onUnsubscription()" color="primary">Unsubscribe</button></div>
+                    </div>
+                  </div>
+
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+          </div>
+
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Drivers">
+        <ng-template matTabContent>
+          <div class="drivers-div">
+            <mat-card class="topic-card">
+
+              <mat-card-title>Always get live updates for all your favourite drivers.</mat-card-title>
+              <mat-card-subtitle>Go ahead and subscribe to your favourite drivers to get live updates.
+              </mat-card-subtitle>
+
+              <mat-card-content>
+                <div class="subs-table-div">
+                  <table mat-table [dataSource]="drivers_table_data" class="mat-elevation-z8 subs-table">
+
+                    <ng-container matColumnDef="position">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Position</th>
+                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="driver_name">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Name</th>
+                      <td mat-cell *matCellDef="let element"> {{element.driver_name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="constructor_name">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Car</th>
+                      <td mat-cell *matCellDef="let element"> {{element.constructor_name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="race_name">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Race</th>
+                      <td mat-cell *matCellDef="let element"> {{element.race_name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="race_year">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Year</th>
+                      <td mat-cell *matCellDef="let element"> {{element.race_year}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="points">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Points</th>
+                      <td mat-cell *matCellDef="let element"> {{element.points}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="driverTableColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: driverTableColumns;">
+                    </tr>
+                  </table>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Constructors">
+        <ng-template matTabContent>
+          <div class="drivers-div">
+            <mat-card class="topic-card">
+
+              <mat-card-title>Always get live updates for all your favourite teams.</mat-card-title>
+              <mat-card-subtitle>Go ahead and subscribe to your favourite teams to get live updates.
+              </mat-card-subtitle>
+
+              <mat-card-content>
+                <div class="subs-table-div">
+                  <table mat-table [dataSource]="constructors_table_data" class="mat-elevation-z8 subs-table">
+
+                    <ng-container matColumnDef="position">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Position</th>
+                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="constructor_name">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Car</th>
+                      <td mat-cell *matCellDef="let element"> {{element.constructor_name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="race_name">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Race</th>
+                      <td mat-cell *matCellDef="let element"> {{element.race_name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="race_year">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Year</th>
+                      <td mat-cell *matCellDef="let element"> {{element.race_year}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="points">
+                      <th mat-header-cell class="table-header" *matHeaderCellDef>Points</th>
+                      <td mat-cell *matCellDef="let element"> {{element.points}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="constructorTableColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: constructorTableColumns;">
+                    </tr>
+                  </table>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+        </ng-template>
+      </mat-tab>
+
+
+
+    </mat-tab-group>
+  </div>
+
+
+</div>

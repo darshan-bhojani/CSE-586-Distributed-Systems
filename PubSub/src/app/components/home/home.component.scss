@@ -1,0 +1,114 @@
+.container-div {
+    height: 100%;
+    padding: 3vh;
+    width: 100vw;
+}
+
+.subsMessage-label {
+    color: red;
+    height: 10vh;
+}
+
+.welcome-user {
+    height: 15%;
+    text-align: center;
+    font-size: 2rem;
+    margin: auto;
+    width: max-content;
+    display: flex;
+}
+
+.table-row {
+    display: flex;
+}
+
+.mat-form-field {
+    width: 80%;
+}
+
+.subscription-btn-div {
+    width: 12vw;
+    margin-top: 2vh;
+}
+
+.subscribe-btn {
+    width: 100%;
+}
+
+.subs-div {
+    display: flex;
+    padding: 1%;
+}
+
+.drivers-div {
+    display: flex;
+    padding: 1%;
+}
+
+.subscription-div {
+    display: flex;
+}
+
+.unsubscription-btn-div {
+    width: 12vw;
+    margin-top: 2vh;
+}
+
+.logout-div {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+.unsubscribe-btn {
+    width: 100%;
+}
+
+.unsubscription-div {
+    display: flex;
+    justify-content: center;
+}
+
+.subscription-card {
+    height: 60vh;
+    width: 100%;
+}
+
+.topic-card {
+    width: 100vw;
+}
+
+.subscription-header-div {
+    height: max-content;
+    padding-right: 2%;
+}
+
+.subscription-card-div {
+    width: 100%;
+    display: flex;
+}
+
+.mat-tab-body-content {
+    overflow: clip !important;
+}
+
+.subscription-table-header {
+    width: 25%;
+}
+
+.subs-table {
+    width: 100%;
+}
+.subs-table-div {
+    max-height: 44vh;
+    overflow: auto;
+}
+
+.subscription-table-div {
+    height: 60vh;
+}
+
+// .table-header{
+//     background-color: black;
+//     color: white;
+// }

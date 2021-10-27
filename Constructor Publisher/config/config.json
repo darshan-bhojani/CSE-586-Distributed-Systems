@@ -1,0 +1,10 @@
+{
+    "development": {
+        "PORT": 8082,
+        "BROKER_URL": "http://172.17.0.3:8080/api"
+    },
+    "production": {
+        "PORT": 8082,
+        "BROKER_URL": "http://172.17.0.3:8080/api"
+    }
+}
