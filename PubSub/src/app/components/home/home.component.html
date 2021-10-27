@@ -9,7 +9,7 @@
   </div>
 
   <div class="row table-row">
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="tabClick($event)">
 
       <mat-tab label="Manage Subscriptions">
         <ng-template matTabContent>

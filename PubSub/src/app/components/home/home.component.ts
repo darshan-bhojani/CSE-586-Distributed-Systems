@@ -137,13 +137,20 @@ export class HomeComponent implements OnInit {
 
       this.setSubscriptionTable()
     })
-    this.setDriversTable()
-    this.setConstructorsTable()
   }
 
-  onLogout(){
+  onLogout() {
     sessionStorage.setItem('username', "")
     this.router.navigate(['/login'])
+  }
+
+  tabClick(tab: any) {
+    if (tab.index == 1) {
+      this.setDriversTable()
+    }
+    else if (tab.index == 2) {
+      this.setConstructorsTable()
+    }
   }
 
   setDriversTable() {
@@ -179,7 +186,6 @@ export class HomeComponent implements OnInit {
     this.subscriptionService.getUserSubscriptions(user).subscribe((data: any) => {
       this.user_subscribed_topics = data.topics
       this.all_main_topic_names = data.all_main_topic_names
-      // console.log(this.user_subscribed_topics)
       var table_data: any = []
       for (let main_topic of this.user_subscribed_topics) {
         let sub_topic_exist: boolean = false
@@ -249,7 +255,7 @@ export class HomeComponent implements OnInit {
                 this.racesList = sub_topic.value
                 break
               case "YEAR":
-                this.yearsList = sub_topic.value
+                this.yearsList = sub_topic.value.map((val: any) => parseInt(val))
                 break
             }
             break
@@ -346,11 +352,11 @@ export class HomeComponent implements OnInit {
       username: this.username,
       topic_ids: topic_ids
     }
-    console.log(user)
     this.subscriptionService.unsubscribeUserTopics(user).subscribe((user_data: any) => {
       this.setSubscriptionTable()
       this.setDriversTable()
       this.setConstructorsTable()
+      this.router.navigate(['/'])
     })
   }
 
@@ -371,7 +377,7 @@ export class HomeComponent implements OnInit {
     for (let main_topic of this.user_subscribed_topics) {
       for (let sub_topic of main_topic.sub_topics) {
         if (this.subTopic != "" && sub_topic.name.toUpperCase() == this.sub_topic_selected.name.toUpperCase() && main_topic.name.toUpperCase() == this.main_topic_selected.name.toUpperCase()) {
-          let updated_sub_topic = sub_topic
+          let updated_sub_topic = sub_topic          
           sub_topic_updated = true
           switch (sub_topic.name.toUpperCase()) {
             case "DRIVER NAME":
@@ -395,7 +401,7 @@ export class HomeComponent implements OnInit {
           user_subscriptions.topics.push(sub_topic)
         }
       }
-      if (this.subTopic != "" && !sub_topic_updated) {
+      if (this.subTopic != "" && !sub_topic_updated && !topic_added) {
         sub_topic_updated = true
         this.sub_topic_selected['type'] = 'sub_topic'
         switch (this.sub_topic_selected.name.toUpperCase()) {
@@ -419,7 +425,7 @@ export class HomeComponent implements OnInit {
         topic_added = true
         user_subscriptions.topics.push(this.sub_topic_selected)
       }
-      if ((this.subTopic != "" && !sub_topic_updated) && (main_topic.name.toUpperCase() == this.main_topic_selected.name.toUpperCase()) || (main_topic['also_subscribed_to_all_of_main_topic'])) {
+      if ((this.subTopic == "" && !sub_topic_updated) && (main_topic.name.toUpperCase() == this.main_topic_selected.name.toUpperCase()) || (main_topic['also_subscribed_to_all_of_main_topic'])) {
         topic_added = true
         user_subscriptions.topics.push({
           "mainTopicId": null,
@@ -429,9 +435,9 @@ export class HomeComponent implements OnInit {
         })
       }
     }
-
+    var main_added : boolean = false
     if (this.all_main_topic_names.map(name => name.toUpperCase()).includes(this.main_topic_selected.name.toUpperCase()) && this.subTopic == "" && !sub_topic_updated) {
-      topic_added = true
+      main_added = true
       user_subscriptions.topics.push({
         "mainTopicId": null,
         "topicId": this.main_topic_selected.topicId,
@@ -440,7 +446,7 @@ export class HomeComponent implements OnInit {
       })
     }
 
-    if (!topic_added) {
+    if (!sub_topic_updated && !main_added) {
       let subs_topic: any = {
         "mainTopicId": this.sub_topic_selected.mainTopicId,
         "topicId": this.sub_topic_selected.topicId,
@@ -490,6 +496,7 @@ export class HomeComponent implements OnInit {
       this.setSubscriptionTable()
       this.setDriversTable()
       this.setConstructorsTable()
+      this.router.navigate(['/'])
     })
 
   }

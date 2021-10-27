@@ -11,7 +11,7 @@ module.exports = {
         }
         axios.post(broker_url + '/publishDriverStandings', new_race_results)
             .then(async (res) => {
-                console.log(res)
+                console.log(res.data.msg)
             })
     }
 }

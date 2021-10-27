@@ -213,13 +213,7 @@ async function saveTopics() {
     },
     {
         "mainTopicId": 1,
-        "name": "Qualifying Results",
-        "type": "sub_topic",
-        "isFutureTopic": false
-    },
-    {
-        "mainTopicId": 1,
-        "name": "Top 3 drivers for a race",
+        "name": "Year",
         "type": "sub_topic",
         "isFutureTopic": false
     },
@@ -239,7 +233,7 @@ async function saveTopics() {
     },
     {
         "mainTopicId": 2,
-        "name": "Top 3 teams for a race",
+        "name": "Year",
         "type": "sub_topic",
         "isFutureTopic": false
     },

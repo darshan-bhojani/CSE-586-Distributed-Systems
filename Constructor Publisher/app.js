@@ -54,6 +54,6 @@ setInterval(function () {
         constructor_topic.unadvertize(process.env.BROKER_URL, future_topic[unadvertise_topic_count]['topicId'])
         unadvertise_topic_count += 1
     }
-}, 30000);
+}, 15000);
 
-app.listen(process.env.PORT, () => console.log(`Server started at port : ${process.env.PORT}`));
+app.listen(process.env.PORT, '0.0.0.0', () => console.log(`Server started at port : ${process.env.PORT}`));

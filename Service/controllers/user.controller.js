@@ -84,10 +84,6 @@ module.exports.advertizeFutureTopics = (req, res, next) => {
                             //console.log('Message sent: %s', info.messageId);
                         });
                     }
-
-
-
-
                 })
             }
             console.log("email sent")
@@ -122,7 +118,6 @@ module.exports.publishDriverStandings = (req, res, next) => {
                 });
             }
             else {
-                console.log(race_data)
                 results = []
                 for (results_data of req.body['MRData']['RaceTable']['Races'][0]['Results']) {
                     results.push({
@@ -681,7 +676,7 @@ module.exports.getUserSubscriptionData = (req, res, next) => {
                                     drivers_data = drivers_data.filter(driver => sub_topic.value.includes(driver.race.name))
                                 }
                                 if (sub_topic.name == "Year") {
-                                    drivers_data = drivers_data.filter(driver => sub_topic.value.includes(driver.year))
+                                    drivers_data = drivers_data.filter(driver => sub_topic.value.includes(driver.year.toString()))
                                 }
                             }
                             for (driver of drivers_data) {
@@ -694,7 +689,7 @@ module.exports.getUserSubscriptionData = (req, res, next) => {
                                     "constructor_nationality": driver.constructor.nationality,
                                     "race_name": driver.race.name,
                                     "race_round": driver.race.round,
-                                    "race_year": driver.race.year,
+                                    "race_year": driver.year,
                                 }
                                 drivers.push(driver_data)
                             }
@@ -740,6 +735,7 @@ module.exports.getUserSubscriptionData = (req, res, next) => {
                                     race_year: { $first: "$year" },
                                     points: { $sum: "$points" },
                                     race_name: { $first: "$race.name" },
+                                    constructor_id: { $first: "$constructorId" }
                                 }
                             },
                             { $sort: { constructor_name: 1 } }
@@ -758,7 +754,7 @@ module.exports.getUserSubscriptionData = (req, res, next) => {
 
                             for (constructor of constructors_data) {
                                 let constructor_data = {
-                                    // "position": driver.position,
+                                    "constructor_id": constructor.constructor_id,
                                     "points": constructor.points,
                                     "constructor_name": constructor.constructor_name,
                                     "constructor_nationality": constructor.constructor_nationality,
@@ -804,11 +800,14 @@ module.exports.getUserSubscriptionData = (req, res, next) => {
                             }
 
                             for (let sub_topic of subscribed_sub_topics) {
+                                if (sub_topic.name == "Constructor Name") {
+                                    constructors_data = constructors_data.filter(constructor => sub_topic.value.includes(constructor.constructor_id))
+                                }
                                 if (sub_topic.name == "Race Name") {
                                     constructors_data = constructors_data.filter(constructor => sub_topic.value.includes(constructor.race_name))
                                 }
                                 if (sub_topic.name == "Year") {
-                                    constructors_data = constructors_data.filter(constructor => sub_topic.value.includes(constructor.race_year))
+                                    constructors_data = constructors_data.filter(constructor => sub_topic.value.includes(constructor.race_year.toString()))
                                 }
                             }
 
